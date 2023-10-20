@@ -1,0 +1,70 @@
+<form>
+    <input name="createNameArea" placeholder="Digite o seu nome" />
+    <input name="createPostArea" placeholder="Digite o seu post" />
+    <button type="submit">Postar</button>
+</form>
+
+<ul class="postList">
+
+</ul>
+
+<script>
+    // Model
+
+    const miniTwitter = {
+        usuarios: [
+            {
+                username: 'rodrigosanchez',
+            }
+        ],
+        posts: [
+            {
+                id: 1,
+                owner: 'Rodrigo',
+                content: 'My first tweet'
+            }
+        ],
+
+        createTweet(data, htmlOnly = false) {
+            if (!htmlOnly) {
+                // create posts on memory (array/object)
+                miniTwitter.posts.push({
+                    id: miniTwitter.posts.length + 1,
+                    owner: data.owner,
+                    content: data.content
+                });
+            }
+
+            // create posts on HTML
+            const $postList = document.querySelector('.postList');
+            $postList.insertAdjacentHTML('afterbegin', `<li>${data.owner} <strong>postou</strong> ${data.content}</li>`);
+        }
+
+    };
+
+
+
+    // [Frontend Code]
+    const $myForm = document.querySelector('form');
+    console.log($myForm);
+
+    // CRUD: [READ]
+    miniTwitter.posts.forEach(({ owner, content }) => {
+        miniTwitter.createTweet({ owner: owner, content: content }, true);
+    })
+
+    // CRUD: [CREATE]
+    $myForm.addEventListener('submit', function createPostController(eventInfos) {
+        eventInfos.preventDefault();
+        console.log('We create a Post');
+        const $createPostArea = document.querySelector('input[name="createPostArea"]');
+        const $createNameArea = document.querySelector('input[name="createNameArea"]');
+
+        miniTwitter.createTweet({ owner: $createNameArea.value, content: $createPostArea.value });
+        console.log(miniTwitter.posts);
+
+        $createPostArea.value = '';
+        $createNameArea.value = '';
+    });
+
+</script>
